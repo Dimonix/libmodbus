@@ -235,8 +235,8 @@ int modbus_send_raw_request(modbus_t *ctx, uint8_t *raw_req, int raw_req_length)
 
     if (raw_req_length > 2) {
         /* Copy data after function code */
-        memcpy(req + req_length, raw_req + 2, raw_req_length - 2);
-        req_length += raw_req_length - 2;
+        memcpy(req + 6, raw_req, raw_req_length);
+        req_length = 6+raw_req_length;
     }
 
     return send_msg(ctx, req, req_length);

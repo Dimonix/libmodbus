@@ -93,7 +93,7 @@ static int _modbus_set_slave(modbus_t *ctx, int slave)
 
 /* Builds a TCP request header */
 static int _modbus_tcp_build_request_basis(modbus_t *ctx, int function,
-                                           int addr, int nb,
+        int addr, int nb,
                                            uint8_t *req)
 {
     modbus_tcp_t *ctx_tcp = ctx->backend_data;
@@ -180,8 +180,11 @@ static ssize_t _modbus_tcp_recv(modbus_t *ctx, uint8_t *rsp, int rsp_length) {
     return recv(ctx->s, (char *)rsp, rsp_length, 0);
 }
 
-static int _modbus_tcp_check_integrity(modbus_t *ctx, uint8_t *msg, const int msg_length)
-{
+static int _modbus_tcp_check_integrity(modbus_t *ctx, uint8_t *msg, const int msg_length) {
+    /* Increase transaction ID */
+    modbus_tcp_t *ctx_tcp = ctx->backend_data;
+    ctx_tcp->t_id = (msg[0] << 8) + msg[1];
+
     return msg_length;
 }
 
@@ -378,7 +381,7 @@ static int _modbus_tcp_pi_connect(modbus_t *ctx)
 
     ai_list = NULL;
     rc = getaddrinfo(ctx_tcp_pi->node, ctx_tcp_pi->service,
-                     &ai_hints, &ai_list);
+            &ai_hints, &ai_list);
     if (rc != 0) {
         if (ctx->debug) {
             fprintf(stderr, "Error returned by getaddrinfo: %s\n", gai_strerror(rc));
@@ -596,7 +599,7 @@ int modbus_tcp_pi_listen(modbus_t *ctx, int nb_connection)
         int s;
 
         s = socket(ai_ptr->ai_family, ai_ptr->ai_socktype,
-                   ai_ptr->ai_protocol);
+                ai_ptr->ai_protocol);
         if (s < 0) {
             if (ctx->debug) {
                 perror("socket");
@@ -669,7 +672,7 @@ int modbus_tcp_accept(modbus_t *ctx, int *s)
 
     if (ctx->debug) {
         printf("The client connection from %s is accepted\n",
-               inet_ntoa(addr.sin_addr));
+                inet_ntoa(addr.sin_addr));
     }
 
     return ctx->s;
