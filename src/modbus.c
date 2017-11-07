@@ -242,7 +242,11 @@ int modbus_send_raw_request(modbus_t *ctx, uint8_t *raw_req, int raw_req_length)
     return send_msg(ctx, req, req_length);
 }
 
-int modbus_send_raw_response(modbus_t *ctx, uint8_t *raw_rsp, int raw_rsp_length) {
+int modbus_get_request_tid(modbus_t *ctx, uint8_t *req, int req_length){
+    return ctx->backend->prepare_response_tid(req, &req_length);
+}
+
+int modbus_send_raw_response(modbus_t *ctx, int tid, uint8_t *raw_rsp, int raw_rsp_length) {
     sft_t sft;
     uint8_t rsp[MAX_MESSAGE_LENGTH];
     int rsp_length;
@@ -264,11 +268,7 @@ int modbus_send_raw_response(modbus_t *ctx, uint8_t *raw_rsp, int raw_rsp_length
     sft.slave = raw_rsp[0];
     sft.function = raw_rsp[1];
     /* The t_id is left to zero */
-    if(ctx->backend->backend_type == _MODBUS_BACKEND_TYPE_TCP) {
-        modbus_tcp_t *ctx_tcp = ctx->backend_data;
-        sft.t_id = ctx_tcp->t_id;
-    } else
-        sft.t_id = 0;
+    sft.t_id = tid;
     /* This response function only set the header so it's convenient here */
     rsp_length = ctx->backend->build_response_basis(&sft, rsp);
 

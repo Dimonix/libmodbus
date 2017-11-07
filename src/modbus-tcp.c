@@ -180,11 +180,8 @@ static ssize_t _modbus_tcp_recv(modbus_t *ctx, uint8_t *rsp, int rsp_length) {
     return recv(ctx->s, (char *)rsp, rsp_length, 0);
 }
 
-static int _modbus_tcp_check_integrity(modbus_t *ctx, uint8_t *msg, const int msg_length) {
-    /* Increase transaction ID */
-    modbus_tcp_t *ctx_tcp = ctx->backend_data;
-    ctx_tcp->t_id = (msg[0] << 8) + msg[1];
-
+static int _modbus_tcp_check_integrity(modbus_t *ctx, uint8_t *msg, const int msg_length)
+{
     return msg_length;
 }
 

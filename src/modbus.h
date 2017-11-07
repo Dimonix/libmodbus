@@ -228,7 +228,8 @@ MODBUS_API modbus_mapping_t* modbus_mapping_new(int nb_bits, int nb_input_bits,
 MODBUS_API void modbus_mapping_free(modbus_mapping_t *mb_mapping);
 
 MODBUS_API int modbus_send_raw_request(modbus_t *ctx, uint8_t *raw_req, int raw_req_length);
-MODBUS_API int modbus_send_raw_response(modbus_t *ctx, uint8_t *raw_rsp, int raw_rsp_length);
+MODBUS_API int modbus_get_request_tid(modbus_t *ctx, uint8_t *req, int req_length);
+MODBUS_API int modbus_send_raw_response(modbus_t *ctx, int tid, uint8_t *raw_rsp, int raw_rsp_length);
 
 MODBUS_API int modbus_receive(modbus_t *ctx, uint8_t *req);
 
