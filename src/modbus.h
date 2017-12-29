@@ -237,6 +237,10 @@ MODBUS_API int modbus_reply(modbus_t *ctx, const uint8_t *req,
                             int req_length, modbus_mapping_t *mb_mapping);
 MODBUS_API int modbus_reply_exception(modbus_t *ctx, const uint8_t *req,
                                       unsigned int exception_code);
+//MODBUS_API int modbus_reply_raw_response(modbus_t *ctx, uint8_t *req, int req_length, uint8_t *raw_rsp, int raw_rsp_length);
+MODBUS_API int modbus_reply_raw_response(modbus_t *ctx, int tid, uint8_t *raw_rsp, int raw_rsp_length);
+
+MODBUS_API int modbus_get_tid(modbus_t *ctx, uint8_t *req, int req_length);
 
 /**
  * UTILS FUNCTIONS
